@@ -1,3 +1,15 @@
+/**
+ * ゲームで使う関数をまとめたクラス
+ *
+ * ====このファイルで定義している関数====
+ * lastAccess：葉の要素に関数を実行させる
+ * allAccess：各ノードに関数を実行させる
+ * second：秒数を入れて、フレーム数を取得できる
+ * getRandom：乱数を取得できる
+ * getBlocksNum：mapData[y][x]はblocksの何番目かを取得できる
+ * setBlock：mapDataの情報からブロックを配置する
+ * setBounceLine：跳ね返る地点の設定を左上のブロックと右下のブロックから設定する
+ */
 
 /**
  * 第一引数の子要素の最後にアクセスする
@@ -62,4 +74,40 @@ function getRandom(start, end) {
  */
 function getBlocksNum(y, x){
   return y * mapData[y].length + x;
+}
+
+/**
+ * mapDataの情報からブロックを配置する
+ * @param {Number} [offsetX=0] x座標の位置調整
+ * @param {Number} [offsetY=0] y座標の位置調整
+ */
+function setBlock(offsetX = 0, offsetY = 0) {
+  blocks = new Array();
+  for(let y = 0; y < mapData.length; y++){
+    for(let x = 0; x < mapData[y].length; x++){
+      //ブロックの作成
+      let block = new Block(x, y);
+      blocks.push(block);
+      block.x += offsetX;
+      block.y += offsetY;
+
+      //ブロックがない場所だったのならブロックを取り除く
+      if(mapData[y][x] == 0){
+        block.remove();
+      }
+    }
+  }
+}
+
+/**
+ * 跳ね返る地点の設定を左上のブロックと右下のブロックから設定する
+ * @param {enchant.Block} leftUpBlock    左上のブロック
+ * @param {enchant.Block} rightDownBlock 右上のブロック
+ */
+function setBounceLine(leftUpBlock, rightDownBlock) {
+  bounceLine = new Array(4);
+  bounceLine[0] = leftUpBlock.y + 32;
+  bounceLine[1] = leftUpBlock.x + 32;
+  bounceLine[2] = rightDownBlock.x;
+  bounceLine[3] = rightDownBlock.y;
 }
